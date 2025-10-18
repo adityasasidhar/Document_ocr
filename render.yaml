@@ -15,7 +15,3 @@ services:
       - key: PORT
         value: "5000"
     healthCheckPath: /health
-    disk:
-      name: document-ocr-disk
-      mountPath: /opt/render/project/src
-      sizeGB: 1
