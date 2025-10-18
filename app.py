@@ -178,7 +178,18 @@ def upload():
         if not os.getenv('ANTHROPIC_API_KEY'):
             raise ValueError("API configuration error. ANTHROPIC_API_KEY not found.")
         
-        balance_sheet_text = generate_balance_sheet(saved_files)
+        # Add timeout handling for Render's 30-second limit
+        try:
+            balance_sheet_text = generate_balance_sheet(saved_files)
+        except Exception as e:
+            if "timeout" in str(e).lower() or "worker" in str(e).lower():
+                # Return a helpful message about the timeout
+                return render_template('results.html',
+                                     error='Processing timeout: The document is too complex for the free tier. Please try with a simpler document or contact support for a higher tier.',
+                                     agent_steps=agent_steps,
+                                     agent_logs=agent_logs + ["⚠️ Processing timed out - document may be too complex"]), 408
+            else:
+                raise e
         agent_steps.append({'label': 'AI analysis (Claude)', 'duration_ms': int((time.time() - stage_start)*1000)})
         agent_logs.append("Received structured balance sheet from Claude.")
         stage_start = time.time()

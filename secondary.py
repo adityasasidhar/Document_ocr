@@ -162,7 +162,7 @@ def _extract_financial_data(client: anthropic.Anthropic, pdf_documents: List[Dic
 
     response = client.messages.create(
         model="claude-sonnet-4-5",
-        max_tokens=7000,
+        max_tokens=4000,  # Reduced from 7000 for faster processing
         temperature=0,
         messages=[{
             "role": "user",
@@ -456,6 +456,61 @@ RULES:
     return balance_sheet
 
 
+def _format_balance_sheet_direct(client: anthropic.Anthropic, pdf_documents: List[Dict], 
+                                doc_summary: Dict[str, Any]) -> str:
+    """Simplified direct formatting for Render free tier."""
+    print("  🤖 Using Claude Haiku for direct formatting...")
+
+    response = client.messages.create(
+        model="claude-haiku-4-5",
+        max_tokens=3000,  # Reduced for faster processing
+        temperature=0,
+        messages=[{
+            "role": "user",
+            "content": pdf_documents + [{
+                "type": "text",
+                "text": f"""Create a simplified Italian balance sheet from these documents. Info: {json.dumps(doc_summary)}
+
+Return ONLY the balance sheet in this format:
+
+BILANCIO D'ESERCIZIO AL [date]
+[Company Name]
+
+STATO PATRIMONIALE - ATTIVO
+A) CREDITI VERSO SOCI: € X,XXX
+B) IMMOBILIZZAZIONI: € X,XXX
+C) ATTIVO CIRCOLANTE: € X,XXX
+D) RATEI E RISCONTI: € X,XXX
+TOTALE ATTIVO: € X,XXX
+
+STATO PATRIMONIALE - PASSIVO
+A) PATRIMONIO NETTO: € X,XXX
+B) FONDI PER RISCHI E ONERI: € X,XXX
+C) TRATTAMENTO FINE RAPPORTO: € X,XXX
+D) DEBITI: € X,XXX
+E) RATEI E RISCONTI: € X,XXX
+TOTALE PASSIVO: € X,XXX
+
+CONTO ECONOMICO
+A) VALORE DELLA PRODUZIONE: € X,XXX
+B) COSTI DELLA PRODUZIONE: € X,XXX
+DIFFERENZA (A-B): € X,XXX
+C) PROVENTI E ONERI FINANZIARI: € X,XXX
+D) RETTIFICHE DI VALORE: € X,XXX
+RISULTATO PRIMA DELLE IMPOSTE: € X,XXX
+20) Imposte: € X,XXX
+UTILE (PERDITA) DELL'ESERCIZIO: € X,XXX
+
+Keep it simple and fast. Use € before amounts."""
+            }]
+        }]
+    )
+
+    balance_sheet = response.content[0].text.strip()
+    print(f"  ✓ Direct formatting complete ({response.usage.input_tokens}→{response.usage.output_tokens} tokens)")
+    return balance_sheet
+
+
 def _cleanup_formatting(text: str) -> str:
     """Remove markdown artifacts."""
     text = re.sub(r'```[a-z]*\n?', '', text, flags=re.IGNORECASE)
@@ -484,17 +539,30 @@ def generate_balance_sheet(filepaths: List[str], api_key: Optional[str] = None) 
 
     pdf_documents = _load_documents(filepaths)
 
-    print("\n📋 PHASE 1: Document Analysis")
-    doc_summary = _analyze_documents(client, pdf_documents)
+    # Check if we're on Render free tier (30-second timeout)
+    is_render_free = os.getenv('RENDER') and os.getenv('PORT')
+    
+    if is_render_free:
+        print("🚀 Using optimized processing for Render free tier...")
+        # Simplified 2-phase approach for free tier
+        print("\n📋 PHASE 1: Quick Analysis")
+        doc_summary = _analyze_documents(client, pdf_documents)
+        
+        print("\n📊 PHASE 2: Direct Formatting")
+        balance_sheet = _format_balance_sheet_direct(client, pdf_documents, doc_summary)
+    else:
+        # Full 4-phase approach for paid tiers
+        print("\n📋 PHASE 1: Document Analysis")
+        doc_summary = _analyze_documents(client, pdf_documents)
 
-    print("\n📊 PHASE 2: Data Extraction")
-    extracted_data = _extract_financial_data(client, pdf_documents, doc_summary)
+        print("\n📊 PHASE 2: Data Extraction")
+        extracted_data = _extract_financial_data(client, pdf_documents, doc_summary)
 
-    print("\n🔢 PHASE 3: Validation and Calculations")
-    validated_data = _validate_and_calculate(client, extracted_data)
+        print("\n🔢 PHASE 3: Validation and Calculations")
+        validated_data = _validate_and_calculate(client, extracted_data)
 
-    print("\n📄 PHASE 4: Balance Sheet Formatting")
-    balance_sheet = _format_balance_sheet(client, validated_data)
+        print("\n📄 PHASE 4: Balance Sheet Formatting")
+        balance_sheet = _format_balance_sheet(client, validated_data)
 
     balance_sheet = _cleanup_formatting(balance_sheet)
 
