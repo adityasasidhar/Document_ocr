@@ -1,0 +1,424 @@
+BILANCIO D'ESERCIZIO AL 31/12/2024
+CO.LI.P SRL
+
+STATO PATRIMONIALE - ATTIVO
+
+A) CREDITI VERSO SOCI PER VERSAMENTI ANCORA DOVUTI
+   TOTALE (A): € 0
+
+B) IMMOBILIZZAZIONI
+
+   I - Immobilizzazioni immateriali
+      1) Spese relative a più esercizi                              € 2.784,00
+      2) Software e prodotti                                        € 3.041,40
+      Totale immobilizzazioni immateriali                           € 5.825,40
+
+   II - Immobilizzazioni materiali
+      1) Impianti EBM                                              € 26.298,00
+      2) Attrezzatura officina                                     € 38.460,18
+      3) Attrezzatura laboratorio                                  € 11.112,97
+      4) Attrezzatura varia                                        € 3.376,06
+      5) Macchine elettroniche ufficio                            € 70.793,21
+      6) Autovetture                                               € 3.214,28
+      7) Autocarri                                                    € 526,63
+      8) Muletti e transpallet                                     € 20.087,71
+      9) Arredi uffici                                            € 59.907,36
+      10) Arredi                                                   € 33.183,97
+      Fondo ammortamento immobilizzazioni materiali              (€ 324.384,13)
+      Totale immobilizzazioni materiali (al netto)                € 236.527,01
+
+   III - Immobilizzazioni finanziarie
+      1) Cauzioni                                                   € 1.354,45
+      2) Quote associative                                          € 1.182,51
+      3) Azioni Alleata Previdenza                                    € 459,65
+      4) Partecipazione Colip Espana                              € 20.000,00
+      5) Altre partecipazioni                                       € 1.330,83
+      Totale immobilizzazioni finanziarie                          € 24.327,44
+
+   TOTALE IMMOBILIZZAZIONI (B): € 266.679,85
+
+C) ATTIVO CIRCOLANTE
+
+   I - Rimanenze
+      1) Materie prime                                            € 458.080,68
+      2) Semilavorati                                             € 103.481,04
+      3) Prodotti finiti                                          € 205.828,70
+      Totale rimanenze                                            € 767.390,42
+
+   II - Crediti (entro 12 mesi)
+      1) Clienti Italia                                           € 310.618,44
+      2) Clienti intracomunitari                                  € 236.527,01
+      3) Clienti extracomunitari                                  € 322.481,63
+      Totale crediti verso clienti                                € 869.627,08
+      4) Portafoglio effetti R.B. SBF                             € 56.081,86
+      5) Credito INAIL                                              € 8.287,95
+      6) Credito imposte anticipate IRES                           € 50.978,76
+      7) Anticipi a fornitori                                      € 34.631,65
+      8) Crediti verso altri                                       € 16.496,00
+      9) Credito verso Erario IVA                                 € 149.926,00
+      10) Crediti verso banche                                         € 9,15
+      Totale altri crediti                                        € 316.411,37
+      Totale crediti (entro 12 mesi)                            € 1.186.038,45
+
+   III - Attività finanziarie che non costituiscono immobilizzazioni
+      Totale attività finanziarie                                       € 0
+
+   IV - Disponibilità liquide
+      1) Cassa                                                      € 4.481,71
+      2) Cassa valuta                                               € 6.337,91
+      3) Cassa valori bollati                                      € 35.781,16
+      4) Disponibilità liquide (totale cassa)                       € 7.906,13
+      5) Unicredit Banca d'Impresa                                 € 65.132,16
+      6) Emilbanca                                                  € 3.376,06
+      7) BNL                                                        € 3.214,28
+      8) Unicredit Banca d'Impresa US$                               € 483,79
+      9) Assicurazione BNL Passo Passo                            € 18.876,21
+      Totale banche c/c                                           € 945.418,75
+      Totale disponibilità liquide                                € 953.324,88
+
+   TOTALE ATTIVO CIRCOLANTE (C): € 2.906.753,75
+
+D) RATEI E RISCONTI
+   Risconti attivi                                                € 252.043,83
+   TOTALE RATEI E RISCONTI (D): € 252.043,83
+
+TOTALE ATTIVO: € 3.425.477,43
+
+
+STATO PATRIMONIALE - PASSIVO
+
+A) PATRIMONIO NETTO
+
+   I - Capitale sociale                                           € 100.000,00
+   
+   IV - Riserva legale                                            € 20.000,00
+   
+   VI - Altre riserve
+      1) Riserva straordinaria                                    € 518.768,69
+      2) Riserva da rivalutazione L. 185/2008                     € 539.087,55
+      3) Riserva straordinaria utili post 2008                    € 832.233,93
+      Totale altre riserve                                      € 1.890.090,17
+
+   IX - Utile (perdita) dell'esercizio                            € 122.127,94
+
+   TOTALE PATRIMONIO NETTO (A): € 2.132.218,11
+
+B) FONDI PER RISCHI E ONERI
+   Fondo svalutazione crediti                                       € 6.854,34
+   TOTALE FONDI PER RISCHI E ONERI (B): € 6.854,34
+
+C) TRATTAMENTO DI FINE RAPPORTO DI LAVORO SUBORDINATO
+   Fondo T.F.R.                                                   € 121.976,00
+   TOTALE T.F.R. (C): € 121.976,00
+
+D) DEBITI (entro 12 mesi)
+
+   1) Fornitori Italia                                            € 808.445,93
+   2) Fornitori extracomunitari                                    € 51.013,00
+   3) Fornitori c/fatture da ricevere                              € 86.899,70
+   Totale debiti verso fornitori                                  € 946.358,63
+
+   4) Dipendenti c/retribuzioni                                    € 21.979,00
+   5) Erario c/IRPEF dipendenti                                    € 30.532,83
+   6) Enti previdenziali c/contributi                              € 26.298,00
+   7) Ritenute sindacali                                              € 701,86
+   8) EBM c/contributi                                                 € 66,00
+   9) Debiti fondi pensioni - Fondapi                                 € 719,76
+   10) Erario c/ritenute d'acconto                                     € 34,20
+   11) Debito IRAP                                                 € 18.789,00
+   12) Cauzioni ricevute                                            € 4.000,00
+   13) Anticipi da clienti                                         € 13.451,62
+   14) Addizionale IRPEF regionale                                    € 668,07
+   15) Addizionale IRPEF comunale                                     € 309,78
+   16) Debito IRES                                                 € 54.860,29
+   17) Debiti verso amministratori                                  € 6.624,00
+   18) Erario imposta sostitutiva TFR 11%                             € 103,62
+   19) Debiti fondi sanitari                                           € 88,00
+   20) Alleata Previdenza                                           € 1.687,79
+   21) Debiti per bolli su fatture                                      € 2,00
+   22) Debiti contributi solidarietà                                   € 24,79
+   23) IVA c/Erario                                              (€ 30.000,00)
+   Totale altri debiti                                            € 151.941,61
+
+   TOTALE DEBITI (D): € 1.098.300,24
+
+E) RATEI E RISCONTI PASSIVI
+   1) Ratei stipendi                                                € 4.961,88
+   2) Ratei salari                                                    € 337,62
+   3) Ratei oneri sociali impiegati                                 € 1.378,05
+   4) Ratei oneri sociali operai                                    € 2.495,64
+   5) Ratei INAIL impiegati                                            € 21,19
+   6) Ratei INAIL operai                                              € 221,00
+   7) Fondo ammortamento impianti                                   € 6.337,91
+   8) Fondo ammortamento attrezzatura                              € 35.781,16
+   9) Fondo ammortamento attrezzatura laboratorio                  € 11.112,97
+   10) Fondo ammortamento attrezzatura varia                        € 3.376,06
+   Totale ratei e risconti passivi                                 € 66.023,48
+
+   TOTALE RATEI E RISCONTI (E): € 66.023,48
+
+TOTALE PASSIVO: € 3.425.372,17
+
+CONTI D'ORDINE
+Fondo ammortamento immobilizzazioni immateriali                     € 5.825,40
+Fondo ammortamento immobilizzazioni materiali                     € 324.384,13
+
+TOTALE PASSIVO E NETTO: € 3.425.477,43
+
+
+CONTO ECONOMICO
+
+A) VALORE DELLA PRODUZIONE
+
+   1) Ricavi delle vendite e delle prestazioni
+      a) Vendita prodotti Italia                                € 1.686.529,90
+      b) Vendita ricambi Italia                                    € 26.365,47
+      c) Prestazioni di servizio Italia                             € 1.050,80
+      d) Trasporti su vendite Italia                                € 9.727,72
+      e) Imballi su vendite Italia                                    € 109,75
+      Totale vendite Italia                                     € 1.723.783,64
+
+      f) Vendita prodotti estero                                   € 27.533,29
+      g) Vendita ricambi estero                                     € 9.304,66
+      h) Prestazioni di servizio estero                               € 152,00
+      i) Trasporti su vendite estero                               € 14.712,35
+      l) Imballi su vendite estero                                  € 2.170,80
+      Totale vendite estero                                        € 53.873,10
+
+      Totale ricavi vendite e prestazioni                       € 1.777.656,74
+
+   2) Variazione delle rimanenze di prodotti in lavorazione,
+      semilavorati e finiti
+      Rimanenze finali                                            € 767.390,42
+      Rimanenze iniziali                                        (€ 808.445,93)
+      Variazione rimanenze                                       (€ 41.055,51)
+
+   5) Altri ricavi e proventi
+      a) Interessi attivi c/c                                       € 7.852,55
+      b) Abbuoni attivi clienti                                       € 444,00
+      c) Abbuoni attivi fornitori                                  € 16.203,12
+      d) Abbuoni attivi vari                                       € 67.080,00
+      e) Contributi c/esercizio                                     € 2.071,46
+      f) Differenze attive di cambio                               € 53.761,58
+      g) Affitti per auto                                           € 8.239,38
+      h) Corrispettivi mensa                                          € 680,56
+      i) Dividendi                                                  € 5.215,38
+      l) Plusvalenze                                                  € 262,10
+      m) Sopravvenienze attive                                     € 78.070,20
+      Totale altri ricavi e proventi                              € 239.880,33
+
+   TOTALE VALORE DELLA PRODUZIONE (A): € 1.976.481,56
+
+B) COSTI DELLA PRODUZIONE
+
+   6) Per materie prime, sussidiarie, di consumo e merci
+      a) Acquisto materie prime                                   € 989.252,66
+      b) Acquisto imballaggi                                      € 115.207,67
+      c) Imballi su acquisti                                       € 20.288,75
+      d) Trasporti su acquisti                                     € 17.076,00
+      e) Spese bancarie su acquisti                                 € 1.130,00
+      Totale costi per acquisti                                 € 1.142.955,08
+
+   7) Per servizi
+      a) Lavorazioni c/terzi                                    € 1.933.950,50
+      b) Energia elettrica                                        € 243.915,50
+      c) Noleggio macchinari                                       € 66.540,00
+      d) Materiale di consumo                                      € 13.626,15
+      e) Altri costi diretti                                       € 23.194,35
+      Totale costi di produzione                                € 2.281.226,50
+
+      f) Assicurazioni                                                 € 52,31
+      g) INAIL soci                                                   € 327,05
+      h) Costi di riscaldamento                                        € 0,06
+      i) Locazione capannone                                        € 5,60
+      l) Manutenzioni e riparazioni                                 € 2.480,40
+      m) Manutenzioni e riparazioni beni                              € 366,09
+      n) Spese per quote associative                                  € 187,18
+      o) Spese da contratti                                         € 1.319,21
+      p) Spese generali                                                € 88,68
+      q) Corsi e libri di aggiornamento                               € 897,10
+      r) Costi per acqua                                            € 1.639,35
+      Totale costi indiretti                                        € 7.362,03
+
+      s) Costi automezzi                                           € 41.306,79
+      t) Trasporti per beni in vendita                             € 30.003,43
+      u) Trasporti per beni in acquisto                            € 10.110,00
+      Totale costi di trasporto                                    € 40.113,43
+
+      v) Provvigioni agenti                                        € 70.070,00
+      w) Provvigioni estere                                         € 9.531,38
+      x) Trasferte Italia                                           € 4.582,85
+      y) Trasferte estero                                             € 900,53
+      z) Costi commerciali                                            € 674,00
+      aa) Spese di rappresentanza                                   € 2.200,00
+      bb) Consulenze grafiche                                       € 1.065,00
+      cc) Erogazioni liberali                                      € 12.373,71
+      dd) Trasferte Italia tecnici                                  € 1.237,53
+      Totale costi commerciali                                    € 102.635,00
+
+      ee) Cancelleria                                               € 2.487,80
+      ff) Telefoniche                                              € 20.506,74
+      gg) Spese di amministrazione                                 € 15.881,44
+      hh) Spese servizio vigilanza                                  € 7.441,20
+      ii) Spese di pulizia                                          € 7.955,00
+      ll) Consulenze tecniche                                      € 10.144,00
+      mm) Consulenze per progettazione                              € 3.400,00
+      nn) Compensi amministratori                                 € 119.999,06
+      oo) Contributi prev. amministratori                          € 19.200,00
+      pp) Spese assistenza software                                 € 9.338,10
+      Totale costi amministrativi                                 € 216.353,34
+
+      Totale per servizi                                        € 2.688.996,09
+
+   8) Per godimento di beni di terzi                                     € 0
+
+   9) Per il personale
+      a) Salari lordi                                             € 258.196,86
+      b) Oneri sociali operai                                      € 77.260,96
+      c) Indennità anzianità operai                                € 20.320,31
+      d) INAIL operai                                               € 5.889,00
+      e) Stipendi lordi                                           € 171.413,25
+      f) Oneri sociali impiegati                                   € 47.712,77
+      g) Indennità anzianità impiegati                             € 12.006,86
+      h) INAIL impiegati                                              € 794,31
+      i) Costi per mensa                                           € 13.002,65
+      l) Costo accordo                                                € 846,00
+      m) Altri costi per il personale                               € 6.475,82
+      n) Salari differiti operai                                    € 2.104,25
+      o) Oneri sociali differiti operai                               € 636,91
+      p) INAIL differita operai                                        € 46,68
+      q) Stipendi differiti impiegati                             (€ 3.823,28)
+      r) INAIL differita impiegati                                   (€ 21,03)
+      s) Contributi fondi pensioni                                    € 542,45
+      t) Contributi fondi sanitari                                  € 1.128,00
+      Totale costi del personale                                  € 614.532,77
+
+   10) Ammortamenti e svalutazioni
+      a) Ammortamento spese relative a più esercizi                 € 2.784,00
+      b) Ammortamento software e prodotti                           € 1.922,10
+      c) Ammortamento attrezzatura officina                         € 1.930,93
+      d) Ammortamento macchine elettroniche                         € 2.903,61
+      e) Ammortamento autocarri                                        € 42,84
+      f) Ammortamento muletti e transpallet                         € 1.733,50
+      g) Ammortamento arredi uffici                                 € 2.636,69
+      Totale ammortamenti                                          € 13.953,67
+
+      h) Accantonamento fondo svalutazione                          € 5.067,83
+      i) Accantonamento svalutazione crediti                      € 125.000,00
+      Totale accantonamenti                                       € 130.067,83
+
+      Totale ammortamenti e svalutazioni                          € 144.021,50
+
+   11) Variazioni delle rimanenze di materie prime,
+       sussidiarie, di consumo e merci                                   € 0
+
+   12) Accantonamenti per rischi                                         € 0
+
+   13) Altri accantonamenti                                              € 0
+
+   14) Oneri diversi di gestione
+      a) IRAP esercizio                                            € 32.342,00
+      b) Imposte e tasse deducibili                                 € 2.146,87
+      c) Costi indeducibili                                           € 162,00
+      d) Sopravvenienze passive                                       € 113,47
+      e) Perdite su crediti                                       € 246.661,40
+      f) Abbuoni passivi clienti                                       € 60,71
+      g) Abbuoni passivi fornitori                                      € 0,17
+      h) Abbuoni passivi vari                                           € 2,25
+      i) IRES esercizio                                            € 55.427,00
+      l) Spese servizi banca                                        € 3.629,99
+      m) Interessi dilazione rateizz.                                   € 9,53
+      n) Interessi di mora                                              € 1,81
+      o) Altri oneri finanziari                                    € 13.816,44
+      p) Sanzioni amministrative                                      € 544,84
+      q) Imposte anticipate IRES                                 (€ 30.000,00)
+      Totale oneri diversi di gestione                            € 324.918,48
+
+   TOTALE COSTI DELLA PRODUZIONE (B): € 4.195.035,70
+
+DIFFERENZA TRA VALORE E COSTI DELLA PRODUZIONE (A - B): (€ 2.218.554,14)
+
+C) PROVENTI E ONERI FINANZIARI
+
+   16) Altri proventi finanziari                                         € 0
+   17) Interessi e altri oneri finanziari                          € 17.457,77
+   17-bis) Utili e perdite su cambi                                      € 0
+
+   TOTALE PROVENTI E ONERI FINANZIARI (C): (€ 17.457,77)
+
+D) RETTIFICHE DI VALORE DI ATTIVITÀ FINANZIARIE
+
+   18) Rivalutazioni                                                     € 0
+   19) Svalutazioni                                                      € 0
+
+   TOTALE RETTIFICHE (D): € 0
+
+RISULTATO PRIMA DELLE IMPOSTE (A - B + C + D): (€ 2.236.011,91)
+
+20) Imposte sul reddito dell'esercizio, correnti, differite e anticipate
+   a) Imposte correnti:
+      - IRES                                                       € 55.427,00
+      - IRAP                                                       € 32.342,00
+      Totale imposte correnti                                      € 87.769,00
+   
+   b) Imposte differite (anticipate)                             (€ 30.000,00)
+
+   Totale imposte                                                  € 57.769,00
+
+21) UTILE (PERDITA) DELL'ESERCIZIO: € 122.127,94
+
+
+NOTA INTEGRATIVA AL BILANCIO CHIUSO AL 31/12/2024
+
+Signori Soci,
+
+il presente bilancio, sottoposto al Vostro esame e alla Vostra approvazione, evidenzia un utile d'esercizio pari a Euro 122.127,94.
+
+CRITERI DI FORMAZIONE
+Il bilancio dell'esercizio chiuso al 31 dicembre 2024 è stato redatto in conformità alle disposizioni del Codice Civile in materia di bilancio. La sua struttura è conforme a quella delineata dal Codice Civile agli articoli 2424 e 2425, così come modificati dal D.Lgs. n. 139/2015.
+
+CRITERI DI VALUTAZIONE
+I criteri utilizzati nella formazione del bilancio chiuso al 31/12/2024 non si discostano dai medesimi utilizzati per la formazione del bilancio del precedente esercizio, in particolare nelle valutazioni e nella continuità dei medesimi principi.
+
+La valutazione delle voci di bilancio è stata fatta ispirandosi a criteri generali di prudenza e competenza, nella prospettiva della continuazione dell'attività. Le immobilizzazioni immateriali sono iscritte al costo di acquisto e vengono ammortizzate sistematicamente in relazione alla residua possibilità di utilizzazione. Le immobilizzazioni materiali sono iscritte al costo di acquisto e rettificate dai corrispondenti fondi di ammortamento. Le rimanenze di magazzino sono valutate al minore tra il costo di acquisto o di produzione e il valore di realizzo desumibile dall'andamento del mercato. I crediti sono iscritti al valore nominale, rettificato dall'apposito fondo svalutazione crediti. I debiti sono rilevati al loro valore nominale.
+
+ATTIVITÀ
+
+Immobilizzazioni Immateriali
+Le immobilizzazioni immateriali ammontano a Euro 5.825,40 e comprendono spese relative a più esercizi per Euro 2.784,00 e software e prodotti per Euro 3.041,40.
+
+Immobilizzazioni Materiali
+Le immobilizzazioni materiali risultano iscritte per un valore netto di Euro 236.527,01. Il costo storico ammonta a Euro 560.911,14 al netto dei fondi ammortamento per Euro 324.384,13. Le principali categorie comprendono: impianti EBM, attrezzature di officina e laboratorio, macchine elettroniche, autovetture e autocarri, muletti e transpallet, arredi per uffici e officina.
+
+Immobilizzazioni Finanziarie
+Le immobilizzazioni finanziarie ammontano a Euro 24.327,44 e includono cauzioni, quote associative, azioni e partecipazioni societarie.
+
+Rimanenze
+Le rimanenze di magazzino al 31/12/2024 ammontano complessivamente a Euro 767.390,42, così suddivise: materie prime Euro 458.080,68, semilavorati Euro 103.481,04, prodotti finiti Euro 205.828,70.
+
+Crediti
+I crediti dell'attivo circolante ammontano complessivamente a Euro 1.186.038,45, di cui crediti verso clienti per Euro 869.627,08 e altri crediti per Euro 316.411,37. Tutti i crediti sono esigibili entro 12 mesi.
+
+Disponibilità Liquide
+Le disponibilità liquide al 31/12/2024 ammontano a Euro 953.324,88, di cui cassa per Euro 7.906,13 e depositi bancari e postali per Euro 945.418,75.
+
+PASSIVITÀ
+
+Patrimonio Netto
+Il patrimonio netto ammonta a Euro 2.132.218,11 ed è così composto: capitale sociale Euro 100.000,00, riserva legale Euro 20.000,00, altre riserve Euro 1.890.090,17, utile dell'esercizio Euro 122.127,94.
+
+Fondi per Rischi e Oneri
+Il fondo svalutazione crediti ammonta a Euro 6.854,34.
+
+Trattamento di Fine Rapporto
+Il fondo TFR ammonta a Euro 121.976,00 e accoglie l'intera passività maturata nei confronti dei dipendenti in conformità alla legislazione vigente e ai contratti collettivi di lavoro.
+
+Debiti
+I debiti ammontano complessivamente a Euro 1.098.300,24, di cui debiti verso fornitori Euro 946.358,63, debiti tributari e previdenziali, debiti verso dipendenti e amministratori. Tutti i debiti sono esigibili entro 12 mesi.
+
+CONTO ECONOMICO
+
+Il valore della produzione ammonta a Euro 1.976.481,56, comprensivo di ricavi delle vendite, variazione rimanenze e altri ricavi. I costi della produzione ammontano a Euro 4.195.035,70 e includono costi per materie prime, servizi, personale, ammortamenti e altri oneri. Gli oneri finanziari netti ammontano a Euro 17.457,77. Il carico fiscale dell'esercizio, al netto delle imposte anticipate, è pari a Euro 57.769,00. L'utile netto dell'esercizio risulta pari a Euro 122.127,94.
+
+ALTRE INFORMAZIONI
+La società CO.LI.P SRL ha sede legale in Italia ed è attiva nel settore della pro

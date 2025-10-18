@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if success %}Success{% else %}Error{% endif %} - Document OCR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(40px);
+        }
+
+        .shape-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -200px;
+            right: -100px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            bottom: -150px;
+            left: -100px;
+            animation: float 25s infinite ease-in-out reverse;
+        }
+
+        .shape-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Enhanced Header */
+        .header-enhanced {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .badge-icon {
+            font-size: 1.2rem;
+        }
+
+        .badge-text {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Result Section */
+        .result-section {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 3rem 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .success-state::before {
+            background: linear-gradient(90deg, #4cc9f0, #4361ee);
+        }
+
+        .error-state::before {
+            background: linear-gradient(90deg, #f72585, #7209b7);
+        }
+
+        .result-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .success-state .result-icon {
+            background: linear-gradient(135deg, rgba(76, 201, 240, 0.1) 0%, rgba(67, 97, 238, 0.1) 100%);
+            color: #4cc9f0;
+        }
+
+        .error-state .result-icon {
+            background: linear-gradient(135deg, rgba(247, 37, 133, 0.1) 0%, rgba(114, 9, 183, 0.1) 100%);
+            color: #f72585;
+        }
+
+        .result-icon svg {
+            width: 50px;
+            height: 50px;
+        }
+
+        .result-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .result-section p {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Download Section */
+        .download-section {
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .download-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .file-name {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        /* Error Message */
+        .error-message {
+            background: rgba(247, 37, 133, 0.05);
+            border: 1px solid rgba(247, 37, 133, 0.2);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .error-message p {
+            color: #f72585;
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn, .secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            min-width: 180px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .secondary-btn {
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--primary);
+            border: 1px solid rgba(67, 97, 238, 0.2);
+        }
+
+        .secondary-btn:hover {
+            background: rgba(67, 97, 238, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Success Animation */
+        .success-animation {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .success-animation .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #4cc9f0;
+            stroke-miterlimit: 10;
+            margin: 0 auto;
+            box-shadow: inset 0px 0px 0px #4cc9f0;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+
+        .success-animation .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #4cc9f0;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .success-animation .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 30px rgba(76, 201, 240, 0.1);
+            }
+        }
+
+        /* Enhanced Footer */
+        .footer-enhanced {
+            text-align: center;
+            padding: 2rem 0 1rem;
+            margin-top: auto;
+        }
+
+        .footer-main {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .footer-sub {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            .header-title {
+                font-size: 2rem;
+            }
+
+            .result-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .primary-btn, .secondary-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.8rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+
+            .result-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .download-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+        /* Agent Timeline */
+        .agent-section { margin-top: 1.5rem; text-align: left; }
+        .agent-section h3 { font-size: 1.2rem; margin-bottom: 0.8rem; }
+        .agent-timeline { list-style: none; padding: 0; margin: 0 0 1rem 0; }
+        .agent-step { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px dashed rgba(0,0,0,0.06); }
+        .agent-step:last-child { border-bottom: none; }
+        .agent-step-check { color: #22c55e; }
+        .agent-step-label { flex: 1; color: var(--dark); }
+        .agent-step-time { color: var(--gray); font-size: 0.9rem; }
+        .agent-console summary { cursor: pointer; color: var(--primary); font-weight: 600; margin-bottom: 0.5rem; }
+        .agent-console pre { background: rgba(0,0,0,0.05); padding: 1rem; border-radius: 8px; max-height: 240px; overflow: auto; }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Enhanced Header -->
+        <header class="header-enhanced">
+            <div class="header-badge">
+                <span class="badge-icon">🤖</span>
+                <span class="badge-text">AI-Powered</span>
+            </div>
+            <h1 class="header-title">
+                <span class="gradient-text">Document OCR</span>
+            </h1>
+            <p class="header-subtitle">Italian Balance Sheet Generator</p>
+        </header>
+
+        <main>
+            {% if success %}
+            <!-- Success Message -->
+            <div class="result-section success-state">
+                <div class="success-animation">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+
+                <h2>Balance Sheet Generated Successfully!</h2>
+                <p>Your document has been processed and is ready for download.</p>
+
+                <div class="download-section">
+                    <a href="{{ download_url }}" class="download-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Download PDF
+                    </a>
+                    <p class="file-name">📄 {{ filename }}</p>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/" class="secondary-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                            <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                        </svg>
+                        Process Another Document
+                    </a>
+                </div>
+
+                <div class="agent-section">
+                    <h3>Agent Timeline</h3>
+                    <ul class="agent-timeline">
+                        {% for step in (agent_steps or []) %}
+                        <li class="agent-step">
+                            <span class="agent-step-check">✔</span>
+                            <span class="agent-step-label">{{ step.label }}</span>
+                            <span class="agent-step-time">{{ "%.1f"|format((step.duration_ms or 0)/1000.0) }}s</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% if agent_logs %}
+                    <details class="agent-console">
+                        <summary>Agent Console</summary>
+                        <pre>{% for line in agent_logs %}{{ line }}
+{% endfor %}</pre>
+                    </details>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <!-- Error Message -->
+            <div class="result-section error-state">
+                <div class="result-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2>Error Processing Documents</h2>
+                <div class="error-message">
+                    <p>{{ error }}</p>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/" class="primary-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                            <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                        </svg>
+                        Try Again
+                    </a>
+                </div>
+
+                <div class="agent-section">
+                    <h3>Agent Timeline</h3>
+                    <ul class="agent-timeline">
+                        {% for step in (agent_steps or []) %}
+                        <li class="agent-step">
+                            <span class="agent-step-check">✔</span>
+                            <span class="agent-step-label">{{ step.label }}</span>
+                            <span class="agent-step-time">{{ "%.1f"|format((step.duration_ms or 0)/1000.0) }}s</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% if agent_logs %}
+                    <details class="agent-console">
+                        <summary>Agent Console</summary>
+                        <pre>{% for line in agent_logs %}{{ line }}
+{% endfor %}</pre>
+                    </details>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </main>
+
+        <!-- Enhanced Footer -->
+        <footer class="footer-enhanced">
+            <div class="footer-content">
+                <p class="footer-main">Powered by <strong>Claude AI</strong> • <strong>ReportLab</strong> • <strong>Flask</strong></p>
+                <p class="footer-sub">Built with ❤️ for professional document processing</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add success animation if we're on the success page
+            if (document.querySelector('.success-animation')) {
+                // Animation is handled by CSS, but we can add any JS interactions here
+                console.log('Success page loaded with animations');
+            }
+
+            // Add a subtle entrance animation for the result card
+            const resultSection = document.querySelector('.result-section');
+            if (resultSection) {
+                resultSection.style.opacity = '0';
+                resultSection.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    resultSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    resultSection.style.opacity = '1';
+                    resultSection.style.transform = 'translateY(0)';
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>
