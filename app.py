@@ -24,8 +24,12 @@ MAX_FILES = 5
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
 # Ensure directories exist
-UPLOAD_FOLDER.mkdir(exist_ok=True)
-OUTPUT_FOLDER.mkdir(exist_ok=True)
+try:
+    UPLOAD_FOLDER.mkdir(exist_ok=True)
+    OUTPUT_FOLDER.mkdir(exist_ok=True)
+except Exception as e:
+    print(f"Warning: Could not create directories: {e}")
+    # On Render, these might be created automatically
 
 
 def allowed_file(filename):
@@ -104,8 +108,12 @@ def upload():
             unique_filename = f"{session_id}_{filename}"
             filepath = UPLOAD_FOLDER / unique_filename
 
-            file.save(filepath)
-            saved_files.append(str(filepath))
+            try:
+                file.save(filepath)
+                saved_files.append(str(filepath))
+            except Exception as e:
+                print(f"Error saving file {filename}: {e}")
+                raise ValueError(f"Could not save file {filename}. Please try again.")
 
         print(f"\n📁 Files saved: {len(saved_files)}")
         for f in saved_files:
@@ -118,6 +126,11 @@ def upload():
         stage_start = time.time()
         agent_logs.append("Sending documents to Claude for analysis...")
         print("\n🚀 Starting balance sheet generation...")
+        
+        # Check if API key is available
+        if not os.getenv('ANTHROPIC_API_KEY'):
+            raise ValueError("API configuration error. ANTHROPIC_API_KEY not found.")
+        
         balance_sheet_text = generate_balance_sheet(saved_files)
         agent_steps.append({'label': 'AI analysis (Claude)', 'duration_ms': int((time.time() - stage_start)*1000)})
         agent_logs.append("Received structured balance sheet from Claude.")
@@ -215,6 +228,31 @@ def download(filename):
 def health():
     """Health check endpoint"""
     return {'status': 'healthy', 'service': 'DocumentOCR'}, 200
+
+
+@app.route('/test')
+def test():
+    """Test endpoint for debugging"""
+    try:
+        # Test API key
+        api_key = os.getenv('ANTHROPIC_API_KEY')
+        api_status = "configured" if api_key else "missing"
+        
+        # Test directories
+        upload_exists = UPLOAD_FOLDER.exists()
+        output_exists = OUTPUT_FOLDER.exists()
+        
+        return {
+            'status': 'ok',
+            'api_key': api_status,
+            'upload_folder': str(UPLOAD_FOLDER),
+            'upload_exists': upload_exists,
+            'output_folder': str(OUTPUT_FOLDER),
+            'output_exists': output_exists,
+            'python_version': os.sys.version
+        }, 200
+    except Exception as e:
+        return {'status': 'error', 'message': str(e)}, 500
 
 
 # Custom error handlers

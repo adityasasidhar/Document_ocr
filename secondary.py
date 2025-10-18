@@ -20,13 +20,17 @@ def get_api_key() -> str:
         print("API key from environment")
         return api_key
 
+    # Try to read from file (for local development)
     try:
         with open('anthropic_api_key.txt', 'r') as f:
             api_key = f.read().strip()
-        print("API key from file")
-        return api_key
+        if api_key:
+            print("API key from file")
+            return api_key
     except FileNotFoundError:
-        raise ValueError("API key not found. Set ANTHROPIC_API_KEY or create anthropic_api_key.txt")
+        pass
+    
+    raise ValueError("API key not found. Set ANTHROPIC_API_KEY environment variable")
 
 
 def _extract_json(text: str) -> Dict[str, Any]:
