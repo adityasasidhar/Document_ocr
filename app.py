@@ -241,9 +241,13 @@ if __name__ == '__main__':
     print(f"\n🌐 Access the application at: http://localhost:5000")
     print("=" * 70 + "\n")
 
+    # Get port from environment variable (for production deployment)
+    port = int(os.getenv('PORT', 5000))
+    debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    
     # Run the app
     app.run(
         host='0.0.0.0',
-        port=5000,
-        debug=os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+        port=port,
+        debug=debug_mode
     )
