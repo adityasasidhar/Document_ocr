@@ -9,7 +9,7 @@ services:
       - key: FLASK_SECRET_KEY
         generateValue: true
       - key: ANTHROPIC_API_KEY
-        sync: false
+        sync: true
       - key: FLASK_DEBUG
         value: "False"
       - key: PORT

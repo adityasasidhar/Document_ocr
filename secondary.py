@@ -17,6 +17,7 @@ def get_api_key() -> str:
     """Get API key from environment variable or file."""
     api_key = os.environ.get('ANTHROPIC_API_KEY')
     if api_key:
+        api_key = api_key.strip()
         print("API key from environment")
         return api_key
 
@@ -29,7 +30,6 @@ def get_api_key() -> str:
             return api_key
     except FileNotFoundError:
         pass
-    
     raise ValueError("API key not found. Set ANTHROPIC_API_KEY environment variable")
 
 

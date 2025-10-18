@@ -1,0 +1,69 @@
+BILANCIO D'ESERCIZIO AL 31/12/2024
+CO.LI.P SRL
+
+STATO PATRIMONIALE - ATTIVO
+
+A) CREDITI VERSO SOCI: € 0
+
+B) IMMOBILIZZAZIONI
+  I - Immobilizzazioni immateriali: € 5,825.40
+  II - Immobilizzazioni materiali
+      Costo storico: € 483,527.29
+      Fondo ammortamento: € (236,527.01)
+      Valore netto: € 247,000.28
+  III - Immobilizzazioni finanziarie: € 24,327.44
+  TOTALE IMMOBILIZZAZIONI (B): € 277,152.84
+
+C) ATTIVO CIRCOLANTE
+  I - Rimanenze: € 808,445.93
+  II - Crediti (entro 12 mesi): € 1,126,150.35
+  III - Attività finanziarie: € 56,081.86
+  IV - Disponibilità liquide: € 952,906.12
+  TOTALE ATTIVO CIRCOLANTE (C): € 2,943,584.26
+
+D) RATEI E RISCONTI: € 252,043.83
+
+TOTALE ATTIVO: € 3,311,723.51
+
+STATO PATRIMONIALE - PASSIVO
+
+A) PATRIMONIO NETTO
+  I - Capitale sociale: € 100,000.00
+  III - Riserve di rivalutazione: € 539,087.55
+  IV - Riserva legale: € 20,000.00
+  VII - Altre riserve: € 1,351,002.62
+  IX - Utile dell'esercizio: € 15,903.67
+  TOTALE PATRIMONIO NETTO (A): € 1,926,081.84
+
+B) FONDI PER RISCHI E ONERI: € 128,830.34
+C) TRATTAMENTO FINE RAPPORTO: € 121,976.00
+D) DEBITI (entro 12 mesi): € 682,763.23
+E) RATEI E RISCONTI: € 17,365.71
+
+TOTALE PASSIVO: € 3,311,723.51
+
+CONTO ECONOMICO
+
+A) VALORE DELLA PRODUZIONE
+   1) Ricavi delle vendite: € 1,777,656.74
+   2) Variazioni rimanenze: € (41,055.51)
+   5) Altri ricavi: € 583,906.41
+   TOTALE (A): € 4,317,163.64
+
+B) COSTI DELLA PRODUZIONE
+   6) Materie prime: € 1,142,955.08
+   9) Personale: € 614,532.77
+   10) Ammortamenti e svalutazioni: € 144,021.50
+   12) Accantonamenti: € 130,067.83
+   14) Oneri diversi: € 307,460.71
+   TOTALE (B): € 4,195,035.70
+
+DIFFERENZA (A-B): € 122,127.94
+
+C) PROVENTI E ONERI FINANZIARI: € 48,797.27
+D) RETTIFICHE DI VALORE: € 0
+
+RISULTATO PRIMA DELLE IMPOSTE: € 170,925.21
+20) Imposte: € 57,427.00
+
+UTILE DELL'ESERCIZIO: € 113,498.21
