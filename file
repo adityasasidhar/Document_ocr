@@ -1,0 +1,16 @@
+PythonProject/
+├── app.py                 # Main Flask application
+├── secondary.py           # AI processing logic
+├── requirements.txt       # Python dependencies
+├── Procfile              # Process configuration
+├── render.yaml           # Render deployment config
+├── .env.example          # Environment variables template
+├── .gitignore            # Git ignore rules
+├── README.md             # This file
+├── static/               # Static files
+│   └── style.css         # CSS styles
+├── templates/            # HTML templates
+│   ├── index.html        # Upload page
+│   └── results.html      # Results page
+├── uploads/              # Uploaded files (created at runtime)
+└── outputs/              # Generated files (created at runtime)
