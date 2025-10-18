@@ -26,19 +26,44 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 # Ensure directories exist with better error handling
 def ensure_directories():
     """Create necessary directories with proper error handling."""
+    global UPLOAD_FOLDER, OUTPUT_FOLDER
+    
+    print(f"🔧 Initializing directories...")
+    print(f"🔧 RENDER env: {os.getenv('RENDER')}")
+    print(f"🔧 Initial UPLOAD_FOLDER: {UPLOAD_FOLDER}")
+    print(f"🔧 Initial OUTPUT_FOLDER: {OUTPUT_FOLDER}")
+    
     try:
+        # Try to create the original directories
         UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
         OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
         print(f"✓ Directories created: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
+        
+        # Verify they exist and are writable
+        if UPLOAD_FOLDER.exists() and OUTPUT_FOLDER.exists():
+            print(f"✓ Directories verified: {UPLOAD_FOLDER.exists()}, {OUTPUT_FOLDER.exists()}")
+        else:
+            raise Exception("Directories were not created successfully")
+            
     except Exception as e:
         print(f"❌ Error creating directories: {e}")
         # Try alternative paths for Render
         if os.getenv('RENDER'):
+            print("🔄 Trying alternative paths for Render...")
             UPLOAD_FOLDER = Path('/tmp/app_uploads')
             OUTPUT_FOLDER = Path('/tmp/app_outputs')
-            UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
-            OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
-            print(f"✓ Using alternative paths: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
+            try:
+                UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+                OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+                print(f"✓ Using alternative paths: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
+            except Exception as e2:
+                print(f"❌ Alternative paths also failed: {e2}")
+                # Last resort - use current working directory
+                UPLOAD_FOLDER = Path('./uploads')
+                OUTPUT_FOLDER = Path('./outputs')
+                UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+                OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+                print(f"✓ Using fallback paths: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
 
 # Initialize directories
 ensure_directories()
@@ -121,10 +146,20 @@ def upload():
             filepath = UPLOAD_FOLDER / unique_filename
 
             try:
+                # Ensure directory exists before saving
+                filepath.parent.mkdir(parents=True, exist_ok=True)
+                print(f"Attempting to save file to: {filepath}")
+                print(f"Directory exists: {filepath.parent.exists()}")
+                print(f"Directory writable: {os.access(filepath.parent, os.W_OK)}")
+                
                 file.save(filepath)
                 saved_files.append(str(filepath))
+                print(f"✓ Successfully saved: {filepath}")
             except Exception as e:
-                print(f"Error saving file {filename}: {e}")
+                print(f"❌ Error saving file {filename}: {e}")
+                print(f"❌ File path: {filepath}")
+                print(f"❌ Directory exists: {filepath.parent.exists()}")
+                print(f"❌ Directory writable: {os.access(filepath.parent, os.W_OK)}")
                 raise ValueError(f"Could not save file {filename}. Please try again.")
 
         print(f"\n📁 Files saved: {len(saved_files)}")
@@ -267,6 +302,28 @@ def health():
     return {'status': 'healthy', 'service': 'DocumentOCR'}, 200
 
 
+@app.route('/fix-dirs')
+def fix_directories():
+    """Manually recreate directories if they're missing"""
+    try:
+        global UPLOAD_FOLDER, OUTPUT_FOLDER
+        
+        # Force recreate directories
+        UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+        OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+        
+        return {
+            'status': 'success',
+            'message': 'Directories recreated',
+            'upload_folder': str(UPLOAD_FOLDER),
+            'output_folder': str(OUTPUT_FOLDER),
+            'upload_exists': UPLOAD_FOLDER.exists(),
+            'output_exists': OUTPUT_FOLDER.exists()
+        }, 200
+    except Exception as e:
+        return {'status': 'error', 'message': str(e)}, 500
+
+
 @app.route('/test')
 def test():
     """Test endpoint for debugging"""
@@ -278,14 +335,30 @@ def test():
         # Test directories
         upload_exists = UPLOAD_FOLDER.exists()
         output_exists = OUTPUT_FOLDER.exists()
+        upload_writable = os.access(UPLOAD_FOLDER, os.W_OK) if upload_exists else False
+        output_writable = os.access(OUTPUT_FOLDER, os.W_OK) if output_exists else False
+        
+        # Test creating a file
+        test_file = UPLOAD_FOLDER / "test.txt"
+        file_creation_test = False
+        try:
+            test_file.write_text("test")
+            file_creation_test = True
+            test_file.unlink()  # Clean up
+        except Exception as e:
+            file_creation_test = f"Failed: {e}"
         
         return {
             'status': 'ok',
             'api_key': api_status,
             'upload_folder': str(UPLOAD_FOLDER),
             'upload_exists': upload_exists,
+            'upload_writable': upload_writable,
             'output_folder': str(OUTPUT_FOLDER),
             'output_exists': output_exists,
+            'output_writable': output_writable,
+            'file_creation_test': file_creation_test,
+            'render_env': os.getenv('RENDER'),
             'python_version': os.sys.version
         }, 200
     except Exception as e:
