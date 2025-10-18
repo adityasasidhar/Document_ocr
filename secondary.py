@@ -14,22 +14,13 @@ import re
 
 
 def get_api_key() -> str:
-    """Get API key from environment variable or file."""
+    """Get API key from environment variable."""
     api_key = os.environ.get('ANTHROPIC_API_KEY')
     if api_key:
         api_key = api_key.strip()
-        print("API key from environment")
+        print("✓ API key from environment")
         return api_key
-
-    # Try to read from file (for local development)
-    try:
-        with open('anthropic_api_key.txt', 'r') as f:
-            api_key = f.read().strip()
-        if api_key:
-            print("API key from file")
-            return api_key
-    except FileNotFoundError:
-        pass
+    
     raise ValueError("API key not found. Set ANTHROPIC_API_KEY environment variable")
 
 

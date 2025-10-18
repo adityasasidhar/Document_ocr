@@ -17,19 +17,31 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY', secrets.token_hex(32))
 
 # Configuration
-UPLOAD_FOLDER = Path('uploads')
-OUTPUT_FOLDER = Path('outputs')
+UPLOAD_FOLDER = Path('/tmp/uploads') if os.getenv('RENDER') else Path('uploads')
+OUTPUT_FOLDER = Path('/tmp/outputs') if os.getenv('RENDER') else Path('outputs')
 ALLOWED_EXTENSIONS = {'pdf'}
 MAX_FILES = 5
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
-# Ensure directories exist
-try:
-    UPLOAD_FOLDER.mkdir(exist_ok=True)
-    OUTPUT_FOLDER.mkdir(exist_ok=True)
-except Exception as e:
-    print(f"Warning: Could not create directories: {e}")
-    # On Render, these might be created automatically
+# Ensure directories exist with better error handling
+def ensure_directories():
+    """Create necessary directories with proper error handling."""
+    try:
+        UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+        OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+        print(f"✓ Directories created: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
+    except Exception as e:
+        print(f"❌ Error creating directories: {e}")
+        # Try alternative paths for Render
+        if os.getenv('RENDER'):
+            UPLOAD_FOLDER = Path('/tmp/app_uploads')
+            OUTPUT_FOLDER = Path('/tmp/app_outputs')
+            UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+            OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+            print(f"✓ Using alternative paths: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
+
+# Initialize directories
+ensure_directories()
 
 
 def allowed_file(filename):
@@ -166,6 +178,15 @@ def upload():
         # Regenerate CSRF token for security
         session.pop('csrf_token', None)
 
+        # Clean up uploaded files to save space
+        try:
+            for file_path in saved_files:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                    print(f"✓ Cleaned up: {file_path}")
+        except Exception as e:
+            print(f"Warning: Could not clean up files: {e}")
+
         return render_template('results.html',
                                success=True,
                                filename=output_filename,
@@ -211,12 +232,28 @@ def download(filename):
         print(f"\n📥 Downloading: {filename}")
 
         # Send file to user
-        return send_file(
+        response = send_file(
             filepath,
             as_attachment=True,
             download_name='bilancio_completo.pdf',
             mimetype='application/pdf'
         )
+        
+        # Clean up files after download (for Render's ephemeral filesystem)
+        try:
+            if filepath.exists():
+                os.remove(filepath)
+                print(f"✓ Cleaned up output file: {filename}")
+            
+            # Also clean up text file if it exists
+            text_file = OUTPUT_FOLDER / f"{session_id}_bilancio.txt"
+            if text_file.exists():
+                os.remove(text_file)
+                print(f"✓ Cleaned up text file: {text_file.name}")
+        except Exception as e:
+            print(f"Warning: Could not clean up files: {e}")
+        
+        return response
 
     except Exception as e:
         print(f"\n❌ Error during download: {e}")
