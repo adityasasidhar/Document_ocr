@@ -519,7 +519,6 @@ def create_pdf(text_content: str, output_filename: str = "bilancio.pdf"):
     from reportlab.pdfbase.ttfonts import TTFont
     import datetime
 
-    # Create document with realistic margins
     doc = SimpleDocTemplate(
         output_filename,
         pagesize=A4,
@@ -532,7 +531,6 @@ def create_pdf(text_content: str, output_filename: str = "bilancio.pdf"):
     story = []
     styles = getSampleStyleSheet()
 
-    # Custom styles for Italian balance sheet
     style_defs = {
         # Header styles
         'HeaderTitle': {
