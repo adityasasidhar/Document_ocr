@@ -17,7 +17,7 @@ A Flask web application that uses Claude AI to process financial PDF documents a
 - **AI**: Anthropic Claude API
 - **PDF Generation**: ReportLab
 - **Frontend**: HTML5, CSS3, JavaScript
-- **Deployment**: Render.com
+- **Deployment**: Vercel
 
 ## Prerequisites
 
@@ -72,9 +72,32 @@ python app.py
 
 The application will be available at `http://localhost:5000`
 
-## Deployment on Render
+## Deployment on Vercel
 
-### Method 1: Using Render Dashboard (Recommended)
+### Method 1: Using Vercel CLI (Recommended)
+
+1. **Install Vercel CLI**
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Login to Vercel**
+   ```bash
+   vercel login
+   ```
+
+3. **Deploy**
+   ```bash
+   vercel --prod
+   ```
+
+4. **Set Environment Variables**
+   ```bash
+   vercel env add ANTHROPIC_API_KEY
+   vercel env add FLASK_SECRET_KEY
+   ```
+
+### Method 2: Using Vercel Dashboard
 
 1. **Push to GitHub**
    ```bash
@@ -83,40 +106,25 @@ The application will be available at `http://localhost:5000`
    git push origin main
    ```
 
-2. **Connect to Render**
-   - Go to [Render Dashboard](https://dashboard.render.com)
-   - Click "New +" → "Web Service"
-   - Connect your GitHub repository
-   - Select your repository
+2. **Connect to Vercel**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "New Project"
+   - Import your GitHub repository
 
-3. **Configure Service**
-   - **Name**: `document-ocr-app` (or your preferred name)
-   - **Environment**: `Python 3`
+3. **Configure Project**
+   - **Framework Preset**: Other
+   - **Root Directory**: `./`
    - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-   - **Plan**: Choose appropriate plan (Free tier available)
+   - **Output Directory**: `./`
 
 4. **Set Environment Variables**
-   - `FLASK_SECRET_KEY`: Generate a secure random string
    - `ANTHROPIC_API_KEY`: Your Anthropic API key
-   - `FLASK_DEBUG`: `False`
-   - `PORT`: `5000`
+   - `FLASK_SECRET_KEY`: A secure random string
 
 5. **Deploy**
-   - Click "Create Web Service"
+   - Click "Deploy"
    - Wait for deployment to complete
    - Your app will be available at the provided URL
-
-### Method 2: Using render.yaml (Infrastructure as Code)
-
-1. **Ensure render.yaml is in your repository root**
-
-2. **Deploy via Render CLI** (if you have it installed)
-   ```bash
-   render deploy
-   ```
-
-3. **Or use the dashboard** with the render.yaml file for automatic configuration
 
 ## Environment Variables
 
@@ -141,8 +149,8 @@ PythonProject/
 ├── app.py                 # Main Flask application
 ├── secondary.py           # AI processing logic
 ├── requirements.txt       # Python dependencies
-├── Procfile              # Process configuration
-├── render.yaml           # Render deployment config
+├── vercel.json           # Vercel deployment config
+├── .vercelignore         # Vercel ignore file
 ├── .env.example          # Environment variables template
 ├── .gitignore            # Git ignore rules
 ├── README.md             # This file
@@ -186,7 +194,7 @@ PythonProject/
 3. **Deployment Issues**
    - Check that all environment variables are set
    - Verify requirements.txt includes all dependencies
-   - Check Render logs for specific error messages
+   - Check Vercel function logs for specific error messages
 
 ### Debug Mode
 
@@ -213,7 +221,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 For support or questions:
 - Create an issue in the GitHub repository
 - Check the troubleshooting section above
-- Review Render deployment logs
+- Review Vercel function logs
 
 ## Changelog
 
@@ -222,4 +230,4 @@ For support or questions:
 - AI-powered PDF processing
 - Italian balance sheet generation
 - Modern web interface
-- Render deployment ready
+- Vercel deployment ready

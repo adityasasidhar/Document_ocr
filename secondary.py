@@ -539,30 +539,19 @@ def generate_balance_sheet(filepaths: List[str], api_key: Optional[str] = None) 
 
     pdf_documents = _load_documents(filepaths)
 
-    # Check if we're on Render free tier (30-second timeout)
-    is_render_free = os.getenv('RENDER') and os.getenv('PORT')
-    
-    if is_render_free:
-        print("🚀 Using optimized processing for Render free tier...")
-        # Simplified 2-phase approach for free tier
-        print("\n📋 PHASE 1: Quick Analysis")
-        doc_summary = _analyze_documents(client, pdf_documents)
-        
-        print("\n📊 PHASE 2: Direct Formatting")
-        balance_sheet = _format_balance_sheet_direct(client, pdf_documents, doc_summary)
-    else:
-        # Full 4-phase approach for paid tiers
-        print("\n📋 PHASE 1: Document Analysis")
-        doc_summary = _analyze_documents(client, pdf_documents)
+    # Use full processing (Vercel has 5-minute timeout)
+    print("🚀 Using full AI processing for Vercel...")
+    print("\n📋 PHASE 1: Document Analysis")
+    doc_summary = _analyze_documents(client, pdf_documents)
 
-        print("\n📊 PHASE 2: Data Extraction")
-        extracted_data = _extract_financial_data(client, pdf_documents, doc_summary)
+    print("\n📊 PHASE 2: Data Extraction")
+    extracted_data = _extract_financial_data(client, pdf_documents, doc_summary)
 
-        print("\n🔢 PHASE 3: Validation and Calculations")
-        validated_data = _validate_and_calculate(client, extracted_data)
+    print("\n🔢 PHASE 3: Validation and Calculations")
+    validated_data = _validate_and_calculate(client, extracted_data)
 
-        print("\n📄 PHASE 4: Balance Sheet Formatting")
-        balance_sheet = _format_balance_sheet(client, validated_data)
+    print("\n📄 PHASE 4: Balance Sheet Formatting")
+    balance_sheet = _format_balance_sheet(client, validated_data)
 
     balance_sheet = _cleanup_formatting(balance_sheet)
 

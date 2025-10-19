@@ -17,8 +17,8 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY', secrets.token_hex(32))
 
 # Configuration
-UPLOAD_FOLDER = Path('/tmp/uploads') if os.getenv('RENDER') else Path('uploads')
-OUTPUT_FOLDER = Path('/tmp/outputs') if os.getenv('RENDER') else Path('outputs')
+UPLOAD_FOLDER = Path('/tmp/uploads') if os.getenv('VERCEL') else Path('uploads')
+OUTPUT_FOLDER = Path('/tmp/outputs') if os.getenv('VERCEL') else Path('outputs')
 ALLOWED_EXTENSIONS = {'pdf'}
 MAX_FILES = 5
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
@@ -29,7 +29,7 @@ def ensure_directories():
     global UPLOAD_FOLDER, OUTPUT_FOLDER
     
     print(f"🔧 Initializing directories...")
-    print(f"🔧 RENDER env: {os.getenv('RENDER')}")
+    print(f"🔧 VERCEL env: {os.getenv('VERCEL')}")
     print(f"🔧 Initial UPLOAD_FOLDER: {UPLOAD_FOLDER}")
     print(f"🔧 Initial OUTPUT_FOLDER: {OUTPUT_FOLDER}")
     
@@ -47,9 +47,9 @@ def ensure_directories():
             
     except Exception as e:
         print(f"❌ Error creating directories: {e}")
-        # Try alternative paths for Render
-        if os.getenv('RENDER'):
-            print("🔄 Trying alternative paths for Render...")
+        # Try alternative paths for Vercel
+        if os.getenv('VERCEL'):
+            print("🔄 Trying alternative paths for Vercel...")
             UPLOAD_FOLDER = Path('/tmp/app_uploads')
             OUTPUT_FOLDER = Path('/tmp/app_outputs')
             try:
@@ -178,18 +178,8 @@ def upload():
         if not os.getenv('ANTHROPIC_API_KEY'):
             raise ValueError("API configuration error. ANTHROPIC_API_KEY not found.")
         
-        # Add timeout handling for Render's 30-second limit
-        try:
-            balance_sheet_text = generate_balance_sheet(saved_files)
-        except Exception as e:
-            if "timeout" in str(e).lower() or "worker" in str(e).lower():
-                # Return a helpful message about the timeout
-                return render_template('results.html',
-                                     error='Processing timeout: The document is too complex for the free tier. Please try with a simpler document or contact support for a higher tier.',
-                                     agent_steps=agent_steps,
-                                     agent_logs=agent_logs + ["⚠️ Processing timed out - document may be too complex"]), 408
-            else:
-                raise e
+        # Process with AI (Vercel has 5-minute timeout, so no special handling needed)
+        balance_sheet_text = generate_balance_sheet(saved_files)
         agent_steps.append({'label': 'AI analysis (Claude)', 'duration_ms': int((time.time() - stage_start)*1000)})
         agent_logs.append("Received structured balance sheet from Claude.")
         stage_start = time.time()
@@ -369,7 +359,7 @@ def test():
             'output_exists': output_exists,
             'output_writable': output_writable,
             'file_creation_test': file_creation_test,
-            'render_env': os.getenv('RENDER'),
+            'vercel_env': os.getenv('VERCEL'),
             'python_version': os.sys.version
         }, 200
     except Exception as e:
