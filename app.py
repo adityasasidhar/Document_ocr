@@ -30,56 +30,20 @@ ALLOWED_EXTENSIONS = {'pdf'}
 MAX_FILES = 5
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB (consistent limit)
 
-# Define default directories BEFORE using them
-UPLOAD_FOLDER = Path('uploads')
-OUTPUT_FOLDER = Path('outputs')
+# Define directories based on environment
+# Vercel uses read-only filesystem except /tmp
+if os.getenv('VERCEL'):
+    UPLOAD_FOLDER = Path('/tmp/uploads')
+    OUTPUT_FOLDER = Path('/tmp/outputs')
+    print("🔧 Running on Vercel - using /tmp for file storage")
+else:
+    UPLOAD_FOLDER = Path('uploads')
+    OUTPUT_FOLDER = Path('outputs')
 
-
-# Ensure directories exist with better error handling
-def ensure_directories():
-    """Create necessary directories with proper error handling."""
-    global UPLOAD_FOLDER, OUTPUT_FOLDER
-
-    print(f"🔧 Initializing directories...")
-    print(f"🔧 VERCEL env: {os.getenv('VERCEL')}")
-    print(f"🔧 Initial UPLOAD_FOLDER: {UPLOAD_FOLDER}")
-    print(f"🔧 Initial OUTPUT_FOLDER: {OUTPUT_FOLDER}")
-
-    try:
-        # Try to create the original directories
-        UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
-        OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
-        print(f"✓ Directories created: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
-
-        # Verify they exist and are writable
-        if UPLOAD_FOLDER.exists() and OUTPUT_FOLDER.exists():
-            print(f"✓ Directories verified: {UPLOAD_FOLDER.exists()}, {OUTPUT_FOLDER.exists()}")
-        else:
-            raise Exception("Directories were not created successfully")
-
-    except Exception as e:
-        print(f"❌ Error creating directories: {e}")
-        # Try alternative paths for Vercel
-        if os.getenv('VERCEL'):
-            print("🔄 Trying alternative paths for Vercel...")
-            UPLOAD_FOLDER = Path('/tmp/app_uploads')
-            OUTPUT_FOLDER = Path('/tmp/app_outputs')
-            try:
-                UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
-                OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
-                print(f"✓ Using alternative paths: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
-            except Exception as e2:
-                print(f"❌ Alternative paths also failed: {e2}")
-                # Last resort - use current working directory
-                UPLOAD_FOLDER = Path('./uploads')
-                OUTPUT_FOLDER = Path('./outputs')
-                UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
-                OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
-                print(f"✓ Using fallback paths: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
-
-
-# Initialize directories immediately
-ensure_directories()
+# Ensure directories exist
+UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+print(f"✓ Directories ready: {UPLOAD_FOLDER}, {OUTPUT_FOLDER}")
 
 
 def allowed_file(filename):
@@ -366,8 +330,6 @@ def health():
 def fix_directories():
     """Manually recreate directories if they're missing"""
     try:
-        global UPLOAD_FOLDER, OUTPUT_FOLDER
-
         # Force recreate directories
         UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
         OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)

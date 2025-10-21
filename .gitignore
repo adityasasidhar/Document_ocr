@@ -1,4 +1,22 @@
 anthropic_api_key.txt
 .idea
 .env
-.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+
+# Uploads and outputs
+uploads/
+outputs/
+
+# Vercel
+.vercel
+.vercel_cache/
+.vercel.json.backup
