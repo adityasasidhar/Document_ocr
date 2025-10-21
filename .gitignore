@@ -20,3 +20,5 @@ outputs/
 .vercel
 .vercel_cache/
 .vercel.json.backup
+
+flask_secret_key.txt
