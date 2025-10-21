@@ -14,14 +14,24 @@ import re
 
 
 def get_api_key() -> str:
-    """Get API key from environment variable."""
-    api_key = os.environ.get('ANTHROPIC_API_KEY')
+    """Get API key from environment variable or file with proper validation."""
+    api_key = os.environ.get('ANTHROPIC_API_KEY', '').strip()
     if api_key:
-        api_key = api_key.strip()
         print("✓ API key from environment")
         return api_key
-    
-    raise ValueError("API key not found. Set ANTHROPIC_API_KEY environment variable")
+
+    key_path = Path('anthropic_api_key.txt')
+    if key_path.exists():
+        try:
+            with key_path.open('r', encoding='utf-8') as f:
+                api_key = f.read().strip()
+                if api_key:
+                    print(f"✓ API key loaded from `{key_path}`")
+                    return api_key
+        except Exception as e:
+            raise IOError(f"Failed to read API key file `{key_path}`: {e}")
+
+    raise ValueError("API key not found. Set `ANTHROPIC_API_KEY` environment variable or provide `anthropic-api-key.json`")
 
 
 def _extract_json(text: str) -> Dict[str, Any]:
@@ -66,14 +76,16 @@ def _extract_json(text: str) -> Dict[str, Any]:
                         if brace_count == 0:
                             json_str = text[start:i + 1]
                             return json.loads(json_str)
-    except (json.JSONDecodeError, ValueError):
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"  ⚠️ Warning: Balanced brace parsing failed: {e}")
         pass
 
     # Attempt 3: Fix common JSON issues
     try:
         cleaned = re.sub(r',(\s*[}\]])', r'\1', text)
         return json.loads(cleaned)
-    except:
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"  ⚠️ Warning: JSON cleaning failed: {e}")
         pass
 
     raise ValueError(f"Failed to extract valid JSON. Preview: {text[:500]}...")
@@ -92,8 +104,11 @@ def _load_documents(filepaths: List[str]) -> List[Dict[str, Any]]:
 
         print(f"📄 Loading: {pdf_path.name}")
 
-        with open(pdf_path, 'rb') as f:
-            pdf_data = base64.standard_b64encode(f.read()).decode('utf-8')
+        try:
+            with open(pdf_path, 'rb') as f:
+                pdf_data = base64.standard_b64encode(f.read()).decode('utf-8')
+        except Exception as e:
+            raise IOError(f"Failed to read PDF file {pdf_path.name}: {e}")
 
         doc_dict = {
             "type": "document",
@@ -104,6 +119,7 @@ def _load_documents(filepaths: List[str]) -> List[Dict[str, Any]]:
             }
         }
 
+        # Add caching to the last document
         if idx == len(filepaths) - 1:
             doc_dict["cache_control"] = {"type": "ephemeral"}
 
@@ -117,15 +133,16 @@ def _analyze_documents(client: anthropic.Anthropic, pdf_documents: List[Dict]) -
     """Phase 1: Quick document analysis using Haiku."""
     print("  🤖 Using Claude Haiku...")
 
-    response = client.messages.create(
-        model="claude-haiku-4-5",
-        max_tokens=1500,
-        temperature=0,
-        messages=[{
-            "role": "user",
-            "content": pdf_documents + [{
-                "type": "text",
-                "text": """Analyze these financial documents. Return ONLY valid JSON:
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5",
+            max_tokens=1500,
+            temperature=0,
+            messages=[{
+                "role": "user",
+                "content": pdf_documents + [{
+                    "type": "text",
+                    "text": """Analyze these financial documents. Return ONLY valid JSON:
 
 {
     "company_name": "exact name",
@@ -138,10 +155,12 @@ def _analyze_documents(client: anthropic.Anthropic, pdf_documents: List[Dict]) -
     "currency": "EUR",
     "document_quality": "clear"
 }""",
-                "cache_control": {"type": "ephemeral"}
+                    "cache_control": {"type": "ephemeral"}
+                }]
             }]
-        }]
-    )
+        )
+    except Exception as e:
+        raise RuntimeError(f"Failed to analyze documents with Claude: {e}")
 
     summary_text = response.content[0].text.strip()
     print(f"  ✓ Analysis complete ({response.usage.input_tokens}→{response.usage.output_tokens} tokens)")
@@ -160,15 +179,16 @@ def _extract_financial_data(client: anthropic.Anthropic, pdf_documents: List[Dic
     """Phase 2: Comprehensive data extraction using Sonnet."""
     print("  🤖 Using Claude Sonnet...")
 
-    response = client.messages.create(
-        model="claude-sonnet-4-5",
-        max_tokens=4000,  # Reduced from 7000 for faster processing
-        temperature=0,
-        messages=[{
-            "role": "user",
-            "content": pdf_documents + [{
-                "type": "text",
-                "text": f"""Extract ALL financial data from documents. Info: {json.dumps(doc_summary)}
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-5",
+            max_tokens=4000,
+            temperature=0,
+            messages=[{
+                "role": "user",
+                "content": pdf_documents + [{
+                    "type": "text",
+                    "text": f"""Extract ALL financial data from documents. Info: {json.dumps(doc_summary)}
 
 Return ONLY valid JSON (no markdown):
 
@@ -272,9 +292,11 @@ Return ONLY valid JSON (no markdown):
 }}
 
 Extract exact numbers. Use 0 if not found. NO trailing commas."""
+                }]
             }]
-        }]
-    )
+        )
+    except Exception as e:
+        raise RuntimeError(f"Failed to extract financial data with Claude: {e}")
 
     data_text = response.content[0].text.strip()
     print(f"  ✓ Data extracted ({response.usage.input_tokens}→{response.usage.output_tokens} tokens)")
@@ -292,13 +314,14 @@ def _validate_and_calculate(client: anthropic.Anthropic, extracted_data: Dict[st
     """Phase 3: Validation and calculations using Haiku."""
     print("  🤖 Using Claude Haiku...")
 
-    response = client.messages.create(
-        model="claude-haiku-4-5",
-        max_tokens=6000,
-        temperature=0,
-        messages=[{
-            "role": "user",
-            "content": f"""Validate and correct calculations:
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5",
+            max_tokens=6000,
+            temperature=0,
+            messages=[{
+                "role": "user",
+                "content": f"""Validate and correct calculations:
 
 {json.dumps(extracted_data, indent=2, ensure_ascii=False)}
 
@@ -321,8 +344,10 @@ Return ONLY valid JSON:
 }}
 
 NO trailing commas. NO markdown."""
-        }]
-    )
+            }]
+        )
+    except Exception as e:
+        raise RuntimeError(f"Failed to validate data with Claude: {e}")
 
     result_text = response.content[0].text.strip()
     print(f"  ✓ Validated ({response.usage.input_tokens}→{response.usage.output_tokens} tokens)")
@@ -352,13 +377,14 @@ def _format_balance_sheet(client: anthropic.Anthropic, validated_data: Dict[str,
     """Phase 4: Format as Italian balance sheet using Haiku."""
     print("  🤖 Using Claude Haiku...")
 
-    response = client.messages.create(
-        model="claude-haiku-4-5",
-        max_tokens=6000,
-        temperature=0,
-        messages=[{
-            "role": "user",
-            "content": f"""Format as Italian balance sheet in PLAIN TEXT:
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5",
+            max_tokens=6000,
+            temperature=0,
+            messages=[{
+                "role": "user",
+                "content": f"""Format as Italian balance sheet in PLAIN TEXT:
 
 {json.dumps(validated_data, indent=2, ensure_ascii=False)}
 
@@ -447,8 +473,10 @@ RULES:
 - 2-space indent
 - Skip zeros
 - "entro 12 mesi" for short-term"""
-        }]
-    )
+            }]
+        )
+    except Exception as e:
+        raise RuntimeError(f"Failed to format balance sheet with Claude: {e}")
 
     balance_sheet = response.content[0].text.strip()
     print(f"  ✓ Formatted ({response.usage.input_tokens}→{response.usage.output_tokens} tokens)")
@@ -456,20 +484,21 @@ RULES:
     return balance_sheet
 
 
-def _format_balance_sheet_direct(client: anthropic.Anthropic, pdf_documents: List[Dict], 
-                                doc_summary: Dict[str, Any]) -> str:
-    """Simplified direct formatting for Render free tier."""
+def _format_balance_sheet_direct(client: anthropic.Anthropic, pdf_documents: List[Dict],
+                                 doc_summary: Dict[str, Any]) -> str:
+    """Simplified direct formatting for faster processing."""
     print("  🤖 Using Claude Haiku for direct formatting...")
 
-    response = client.messages.create(
-        model="claude-haiku-4-5",
-        max_tokens=3000,  # Reduced for faster processing
-        temperature=0,
-        messages=[{
-            "role": "user",
-            "content": pdf_documents + [{
-                "type": "text",
-                "text": f"""Create a simplified Italian balance sheet from these documents. Info: {json.dumps(doc_summary)}
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5",
+            max_tokens=3000,
+            temperature=0,
+            messages=[{
+                "role": "user",
+                "content": pdf_documents + [{
+                    "type": "text",
+                    "text": f"""Create a simplified Italian balance sheet from these documents. Info: {json.dumps(doc_summary)}
 
 Return ONLY the balance sheet in this format:
 
@@ -502,9 +531,11 @@ RISULTATO PRIMA DELLE IMPOSTE: € X,XXX
 UTILE (PERDITA) DELL'ESERCIZIO: € X,XXX
 
 Keep it simple and fast. Use € before amounts."""
+                }]
             }]
-        }]
-    )
+        )
+    except Exception as e:
+        raise RuntimeError(f"Failed to format balance sheet directly with Claude: {e}")
 
     balance_sheet = response.content[0].text.strip()
     print(f"  ✓ Direct formatting complete ({response.usage.input_tokens}→{response.usage.output_tokens} tokens)")
@@ -512,19 +543,35 @@ Keep it simple and fast. Use € before amounts."""
 
 
 def _cleanup_formatting(text: str) -> str:
-    """Remove markdown artifacts."""
+    """Remove markdown artifacts and clean up formatting."""
+    # Remove markdown code blocks
     text = re.sub(r'```[a-z]*\n?', '', text, flags=re.IGNORECASE)
 
+    # Remove markdown formatting characters
     for char in ['**', '*', '|', '###', '##', '#']:
         text = text.replace(char, '')
 
+    # Normalize excessive newlines
     text = re.sub(r'\n{3,}', '\n\n', text)
 
     return text.strip()
 
 
 def generate_balance_sheet(filepaths: List[str], api_key: Optional[str] = None) -> str:
-    """Multi-agent system for generating Italian balance sheets."""
+    """Multi-agent system for generating Italian balance sheets.
+
+    Args:
+        filepaths: List of PDF file paths to process
+        api_key: Optional Anthropic API key (will use env var if not provided)
+
+    Returns:
+        Formatted Italian balance sheet as text
+
+    Raises:
+        ValueError: If more than 5 files provided or API key missing
+        FileNotFoundError: If PDF file not found
+        RuntimeError: If AI processing fails
+    """
     print("\n" + "=" * 70)
     print("MULTI-AGENT BALANCE SHEET GENERATOR".center(70))
     print("=" * 70 + "\n")
@@ -535,50 +582,77 @@ def generate_balance_sheet(filepaths: List[str], api_key: Optional[str] = None) 
     if api_key is None:
         api_key = get_api_key()
 
-    client = anthropic.Anthropic(api_key=api_key)
+    # Create client with timeout
+    try:
+        client = anthropic.Anthropic(
+            api_key=api_key,
+            timeout=300.0  # 5 minutes timeout
+        )
+    except Exception as e:
+        raise RuntimeError(f"Failed to initialize Anthropic client: {e}")
 
-    pdf_documents = _load_documents(filepaths)
+    # Load documents
+    try:
+        pdf_documents = _load_documents(filepaths)
+    except Exception as e:
+        raise RuntimeError(f"Failed to load documents: {e}")
 
-    # Use full processing (Vercel has 5-minute timeout)
-    print("🚀 Using full AI processing for Vercel...")
-    print("\n📋 PHASE 1: Document Analysis")
-    doc_summary = _analyze_documents(client, pdf_documents)
+    # Use full processing pipeline
+    print("🚀 Using full AI processing pipeline...")
 
-    print("\n📊 PHASE 2: Data Extraction")
-    extracted_data = _extract_financial_data(client, pdf_documents, doc_summary)
+    try:
+        print("\n📋 PHASE 1: Document Analysis")
+        doc_summary = _analyze_documents(client, pdf_documents)
 
-    print("\n🔢 PHASE 3: Validation and Calculations")
-    validated_data = _validate_and_calculate(client, extracted_data)
+        print("\n📊 PHASE 2: Data Extraction")
+        extracted_data = _extract_financial_data(client, pdf_documents, doc_summary)
 
-    print("\n📄 PHASE 4: Balance Sheet Formatting")
-    balance_sheet = _format_balance_sheet(client, validated_data)
+        print("\n🔢 PHASE 3: Validation and Calculations")
+        validated_data = _validate_and_calculate(client, extracted_data)
 
-    balance_sheet = _cleanup_formatting(balance_sheet)
+        print("\n📄 PHASE 4: Balance Sheet Formatting")
+        balance_sheet = _format_balance_sheet(client, validated_data)
 
-    print("\n✅ Balance sheet generation complete!")
-    return balance_sheet
+        # Clean up formatting
+        balance_sheet = _cleanup_formatting(balance_sheet)
+
+        print("\n✅ Balance sheet generation complete!")
+        return balance_sheet
+
+    except Exception as e:
+        print(f"\n❌ Error in AI processing pipeline: {e}")
+        raise
 
 
 def create_pdf(text_content: str, output_filename: str = "bilancio.pdf"):
-    """Create professional, realistic Italian balance sheet PDF."""
+    """Create professional, realistic Italian balance sheet PDF.
+
+    Args:
+        text_content: Formatted balance sheet text
+        output_filename: Output PDF file path
+
+    Raises:
+        IOError: If PDF creation fails
+    """
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import A4
     from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT, TA_JUSTIFY
     from reportlab.lib.units import mm
-    from reportlab.pdfbase import pdfmetrics
-    from reportlab.pdfbase.ttfonts import TTFont
     import datetime
 
-    doc = SimpleDocTemplate(
-        output_filename,
-        pagesize=A4,
-        topMargin=15 * mm,
-        bottomMargin=15 * mm,
-        leftMargin=15 * mm,
-        rightMargin=15 * mm
-    )
+    try:
+        doc = SimpleDocTemplate(
+            output_filename,
+            pagesize=A4,
+            topMargin=15 * mm,
+            bottomMargin=15 * mm,
+            leftMargin=15 * mm,
+            rightMargin=15 * mm
+        )
+    except Exception as e:
+        raise IOError(f"Failed to create PDF document: {e}")
 
     story = []
     styles = getSampleStyleSheet()
@@ -909,13 +983,16 @@ def create_pdf(text_content: str, output_filename: str = "bilancio.pdf"):
     except Exception as e:
         print(f"❌ Error creating PDF: {e}")
         # Fallback: create simple PDF
-        simple_story = [Paragraph(text_content.replace('\n', '<br/>'), styles['Normal'])]
-        doc.build(simple_story)
-        print("✓ Created simple PDF fallback")
+        try:
+            simple_story = [Paragraph(text_content.replace('\n', '<br/>'), styles['Normal'])]
+            doc.build(simple_story)
+            print("✓ Created simple PDF fallback")
+        except Exception as e2:
+            raise IOError(f"Failed to create PDF (even fallback failed): {e2}")
 
 
 def main():
-    """Main execution."""
+    """Main execution for testing."""
     INPUT_FILES = [
         'client_input/BILANCIO 31.12.2024.pdf',
     ]
